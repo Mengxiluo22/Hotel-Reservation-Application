@@ -6,7 +6,8 @@ import java.util.*;
 
 public class ReservationService {
 
-    private final ArrayList<Room> allRooms = new ArrayList<Room>();
+
+    private final Map<String,Room> allRooms= new HashMap<>();
     private final Map<Customer,Collection<Reservation>> allReservatoin = new HashMap<>();
     void ReservationService(){};
     static ReservationService obj = null;
@@ -21,21 +22,22 @@ public class ReservationService {
 
 
     public void addRoom(Room room){
-        allRooms.add(room);
+        allRooms.put(room.getRoomNumber(),room);
 
     }
-    public ArrayList<Room> getAllRoom(){
-        return(allRooms);
+    public  Collection<Room> getAllRoom(){
+        return(allRooms.values());
     }
     public Room getARoom(String roomId){
-        int index = 0;
-        for (Room room: allRooms) {
-            if (Objects.equals(room.getRoomNumber(), roomId)) {
-                index = allRooms.indexOf(room);
+        Room findroom = null;
+        for (Map.Entry<String,Room> entry : allRooms.entrySet()) {
+            if (Objects.equals(entry.getKey(), roomId)) {
+               findroom = entry.getValue();
+
 
             }
         }
-        return allRooms.get(index);
+        return findroom;
     }
 
     public Reservation reserveARoom(Customer customer, Room room, Date checkInDate, Date checkOutDate){
@@ -62,7 +64,7 @@ public class ReservationService {
             }
         }
 
-        for (Room room:allRooms){
+        for (Room room:allRooms.values()){
             if (!reservedRooms.contains(room)){
                 foundedRooms.add(room);
             }
